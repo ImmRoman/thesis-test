@@ -1,0 +1,31 @@
+# Core
+torch>=2.1.0
+torchvision>=0.16.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+
+# Models
+ultralytics>=8.0.0        # YOLOv8/v9/v10
+transformers>=4.35.0      # RT-DETR via HuggingFace
+
+# Config & logging
+PyYAML>=6.0
+omegaconf>=2.3.0
+hydra-core>=1.3.0
+wandb>=0.16.0             # experiment tracking
+tensorboard>=2.14.0
+
+# Evaluation
+pycocotools>=2.0.7        # COCO mAP
+motmetrics>=1.4.0         # MOT metrics (MOTA, MOTP)
+# trackeval                # HOTA — install from: github.com/JonathonLuiten/TrackEval
+
+# Data
+pandas>=2.0.0
+tqdm>=4.66.0
+albumentations>=1.3.0     # augmentations
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0

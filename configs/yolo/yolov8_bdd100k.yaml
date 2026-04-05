@@ -1,0 +1,28 @@
+# configs/yolo/yolov8_bdd100k.yaml
+# Inherits from base — YOLO-specific overrides
+
+defaults:
+  - base
+
+model:
+  name: yolo
+  variant: yolov8l           # yolov8n | yolov8s | yolov8m | yolov8l | yolov8x
+  pretrained: true           # start from COCO weights
+  freeze_backbone: false
+
+data:
+  dataset: bdd100k
+  img_size: 640
+  batch_size: 16
+
+training:
+  epochs: 100
+  optimizer: sgd
+  lr: 1e-2
+  weight_decay: 5e-4
+  lr_scheduler: cosine
+  warmup_epochs: 3
+
+logging:
+  use_wandb: true
+  run_name: yolov8l_bdd100k

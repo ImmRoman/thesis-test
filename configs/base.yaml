@@ -1,0 +1,50 @@
+# configs/base.yaml
+# ─────────────────────────────────────────────
+# Shared defaults — overridden by model configs
+# ─────────────────────────────────────────────
+
+project:
+  name: vehicle_detection_thesis
+  run_name: baseline
+  output_dir: runs/
+
+data:
+  dataset: bdd100k          # kitti | ua_detrac | bdd100k
+  data_root: data/
+  img_size: 640
+  batch_size: 16
+  num_workers: 4
+  augment: true
+  classes:
+    - car
+    - truck
+    - bus
+    - motorcycle
+    - bicycle
+    - pedestrian   # include for completeness, filter at eval if needed
+
+training:
+  epochs: 100
+  optimizer: adamw          # sgd | adam | adamw
+  lr: 1e-4
+  weight_decay: 1e-4
+  lr_scheduler: cosine      # cosine | step | plateau
+  warmup_epochs: 3
+  grad_clip: 10.0
+  amp: true                 # automatic mixed precision
+  seed: 42
+  device: cuda              # cuda | cpu | mps
+
+logging:
+  use_wandb: true
+  use_tensorboard: false
+  log_every: 10             # steps
+  save_every: 5             # epochs
+  save_best: true
+  metric_to_watch: mAP50-95
+
+evaluation:
+  conf_threshold: 0.25
+  iou_threshold: 0.45
+  max_det: 300
+  compute_tracking_metrics: false

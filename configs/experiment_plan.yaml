@@ -1,0 +1,71 @@
+# configs/experiment_plan.yaml
+# ─────────────────────────────────────────────────────────────
+# Systematic training plan for the thesis.
+# Run with: python scripts/run_experiments.py --plan configs/experiment_plan.yaml
+# ─────────────────────────────────────────────────────────────
+
+experiments:
+
+  # ── Phase 1: Model size sweep on BDD100K ──────────────────
+  - name: yolov8l_bdd100k
+    config: configs/yolo/yolov8_bdd100k.yaml
+    overrides:
+      - model.variant=yolov8l
+
+  - name: yolov8x_bdd100k
+    config: configs/yolo/yolov8_bdd100k.yaml
+    overrides:
+      - model.variant=yolov8x
+      - logging.run_name=yolov8x_bdd100k
+
+  # YOLOv10 — NMS-free, direct comparison with RT-DETR on this axis
+  - name: yolov10l_bdd100k
+    config: configs/yolo/yolov8_bdd100k.yaml
+    overrides:
+      - model.variant=yolov10l
+      - logging.run_name=yolov10l_bdd100k
+
+  - name: yolov10x_bdd100k
+    config: configs/yolo/yolov8_bdd100k.yaml
+    overrides:
+      - model.variant=yolov10x
+      - logging.run_name=yolov10x_bdd100k
+
+  # ── Phase 2: RT-DETR on BDD100K ───────────────────────────
+  - name: rtdetr_l_bdd100k
+    config: configs/rtdetr/rtdetr_kitti.yaml
+    overrides:
+      - data.dataset=bdd100k
+      - data.batch_size=8
+      - logging.run_name=rtdetr_l_bdd100k
+
+  - name: rtdetr_x_bdd100k
+    config: configs/rtdetr/rtdetr_kitti.yaml
+    overrides:
+      - model.variant=rtdetr-x
+      - data.dataset=bdd100k
+      - data.batch_size=4
+      - logging.run_name=rtdetr_x_bdd100k
+
+  # ── Phase 3: Fine-tune on KITTI (cross-dataset) ───────────
+  - name: yolov8l_bdd100k_ft_kitti
+    config: configs/yolo/yolov8_bdd100k.yaml
+    overrides:
+      - data.dataset=kitti
+      - training.epochs=30
+      - training.lr=1e-3           # lower LR for fine-tuning
+      - model.checkpoint=runs/yolov8l_bdd100k/weights/best.pt
+      - logging.run_name=yolov8l_ft_kitti
+
+  - name: rtdetr_l_bdd100k_ft_kitti
+    config: configs/rtdetr/rtdetr_kitti.yaml
+    overrides:
+      - training.epochs=20
+      - training.lr=5e-5
+      - model.checkpoint=runs/rtdetr_l_bdd100k/weights/best.pt
+      - logging.run_name=rtdetr_l_ft_kitti
+
+# ── Evaluation: every model is tested on both datasets ──────
+eval_datasets:
+  - bdd100k
+  - kitti

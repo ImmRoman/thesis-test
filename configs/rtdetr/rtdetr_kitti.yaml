@@ -1,0 +1,33 @@
+# configs/rtdetr/rtdetr_kitti.yaml
+# Inherits from base — RT-DETR-specific overrides
+
+defaults:
+  - base
+
+model:
+  name: rtdetr
+  variant: rtdetr-l          # rtdetr-r18 | rtdetr-r34 | rtdetr-r50 | rtdetr-l | rtdetr-x
+  pretrained: true
+  freeze_backbone: false
+  # RT-DETR specific
+  num_queries: 300
+  num_decoder_layers: 6
+
+data:
+  dataset: kitti
+  img_size: 640
+  batch_size: 8              # transformers need more VRAM
+
+training:
+  epochs: 72                 # standard DETR schedule
+  optimizer: adamw
+  lr: 1e-4
+  lr_backbone: 1e-5          # lower LR for pretrained backbone
+  weight_decay: 1e-4
+  lr_scheduler: step
+  lr_step_milestones: [54]
+  warmup_epochs: 0
+
+logging:
+  use_wandb: true
+  run_name: rtdetr_l_kitti
